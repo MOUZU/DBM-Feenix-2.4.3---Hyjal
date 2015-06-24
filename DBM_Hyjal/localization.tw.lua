@@ -74,7 +74,7 @@ DBM_AZGALOR_WARN_SILENCESOON				= "*** 即將發動沉默 ***";
 
 DBM_SBT["Silence"] 					= "下一次沉默";
 DBM_SBT["Azgalor"] = {
-	{"Doom: (.*)","災厄降臨: %1"},
+	[1] = {"Doom: (.*)","災厄降臨: %1"},
 };
 
 -- Archimonde

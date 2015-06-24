@@ -1,4 +1,4 @@
-﻿local MHT = DBM:NewBossMod("MHT", DBM_MHT_NAME, DBM_MHT_DESCRIPTION, DBM_HYJAL, DBM_HYJAL_TAB, 0);
+local MHT = DBM:NewBossMod("MHT", DBM_MHT_NAME, DBM_MHT_DESCRIPTION, DBM_HYJAL, DBM_HYJAL_TAB, 0);
 
 local lastwave = 0;
 local boss = 0;
@@ -80,10 +80,8 @@ function MHT:OnSync(msg)
 			end
 			self:UnScheduleSelf("WaveSoon");
 			if boss == 1 or boss == 2 then	
-				timer = 125;
-				if wave == 8 then
-					timer = 140;
-				end
+				local timers = {127.5, 127.5, 127.5, 127.5, 127.5, 127.5, 127.5, 140}
+                timer = timers[wave]
 				if MHT.Options.Mobs and boss == 1 then
 					if wave == 1 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING1, wave, 10, DBM_MHT_GHOUL), 1);
@@ -116,23 +114,15 @@ function MHT:OnSync(msg)
 					elseif wave == 6 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING3, wave, 6, DBM_MHT_GHOUL, 2, DBM_MHT_ABOMINATION, 4, DBM_MHT_NECROMANCER), 1);
 					elseif wave == 7 then
-						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING4, wave, 2, DBM_MHT_GHOUL, 4, DBM_MHT_FIEND, 4, DBM_MHT_ABOMINATION, 2, DBM_MHT_BANSHEE), 1);
+						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING3, wave,  4, DBM_MHT_FIEND, 4, DBM_MHT_ABOMINATION, 4, DBM_MHT_BANSHEE), 1);
 					elseif wave == 8 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING5, wave, 3, DBM_MHT_GHOUL, 3, DBM_MHT_FIEND, 4, DBM_MHT_ABOMINATION, 2, DBM_MHT_NECROMANCER, 2, DBM_MHT_BANSHEE), 1);
 					end
 				end
-			elseif boss == 3 or boss == 4 then
-				timer = 135;
-				if wave == 2 or wave == 4 then
-					timer = 165;
-				elseif wave == 3 then
-					timer = 160;
-				elseif wave == 7 then
-					timer = 195;
-				elseif wave == 8 then
-					timer = 225;
-				end
-				if MHT.Options.Mobs and boss == 3 then
+			elseif boss == 3 then
+				local timers = {135, 160, 190, 165, 140, 130, 195, 225}
+                timer = timers[wave]
+				if MHT.Options.Mobs then
 					if wave == 1 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING4, wave, 4, DBM_MHT_GHOUL, 4, DBM_MHT_ABOMINATION, 2, DBM_MHT_NECROMANCER, 2, DBM_MHT_BANSHEE), 1); 
 					elseif wave == 2 then
@@ -150,7 +140,10 @@ function MHT:OnSync(msg)
 					elseif wave == 8 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING5, wave, 6, DBM_MHT_GHOUL, 2, DBM_MHT_FIEND, 4, DBM_MHT_ABOMINATION, 2, DBM_MHT_NECROMANCER, 2, DBM_MHT_BANSHEE), 1); 
 					end
-				elseif MHT.Options.Mobs and boss == 4 then
+            elseif boss == 4 then
+                local timers = {135, 190, 190, 195, 140, 165, 195, 225}
+                timer = timers[wave]
+				elseif MHT.Options.Mobs then
 					if wave == 1 then
 						self:Announce(string.format(DBM_MHT_WAVE_INC_WARNING2, wave, 6, DBM_MHT_ABOMINATION, 6, DBM_MHT_NECROMANCER), 1);
 					elseif wave == 2 then

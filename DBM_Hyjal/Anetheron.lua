@@ -1,25 +1,27 @@
 local Anetheron = DBM:NewBossMod("Anetheron", DBM_ANETHERON_NAME, DBM_ANETHERON_DESCRIPTION, DBM_MOUNT_HYJAL, DBM_HYJAL_TAB, 2);
 
-Anetheron.Version	= "1.0";
-Anetheron.Author		= "Tandanu";
+Anetheron.Version	= "1.1";
+Anetheron.Author	= "LYQ";
 
 local lastTarget;
-local lastInferno = 0;
 
-Anetheron:RegisterCombat("YELL", DBM_ANETHERON_YELL_PULL, nil, nil, nil, 60);
+--Anetheron:RegisterCombat("YELL", DBM_ANETHERON_YELL_PULL, nil, nil, nil, 60);
+Anetheron:RegisterCombat("COMBAT", 5, DBM_ANETHERON_NAME)
 
 Anetheron:AddOption("WarnCarrion", true, DBM_ANEETHERON_OPTION_CARRION);
 Anetheron:AddOption("WarnInferno", true, DBM_ANEETHERON_OPTION_INFERNAL);
 
 Anetheron:AddBarOption("Infernal")
+Anetheron:AddBarOption("Carrion Swarm")
 
 Anetheron:RegisterEvents(
 	"SPELL_AURA_APPLIED"
 );
 
---function Anetheron:OnCombatStart(delay)
---	self:StartStatusBarTimer(50, "Carrion Swarm", "Interface\\Icons\\Spell_Shadow_CarrionSwarm"); -- ?
---end
+function Anetheron:OnCombatStart(delay)
+    self:EndStatusBarTimer("Next Wave")
+    self:StartStatusBarTimer(15 - delay, "Carrion Swarm", "Interface\\Icons\\Spell_Shadow_CarrionSwarm");
+end
 
 function Anetheron:OnEvent(event, arg1)
 	if event == "SPELL_AURA_APPLIED" then
@@ -45,10 +47,9 @@ function Anetheron:OnSync(msg)
 		if self.Options.WarnCarrion then
 			self:Announce(DBM_ANETHERON_WARN_CARRION, 1);
 		end
---		self:StartStatusBarTimer(10, "Carrion Swarm", "Interface\\Icons\\Spell_Shadow_CarrionSwarm"); -- timer?
+		self:StartStatusBarTimer(18, "Carrion Swarm", "Interface\\Icons\\Spell_Shadow_CarrionSwarm");
 		
-	elseif msg:sub(0, 7) == "Inferno" and (GetTime() - lastInferno) > 40 then
-		lastInferno = GetTime();
+	elseif msg:sub(0, 7) == "Inferno" then
 		local target = msg:sub(8);
 		if target == "" then
 			for i = 1, GetNumRaidMembers() do
@@ -63,9 +64,9 @@ function Anetheron:OnSync(msg)
 
 		if self.Options.WarnInferno then
 			self:Announce(DBM_ANETHERON_WARN_INFERNO:format(target), 3);
-			self:ScheduleSelf(47, "InfernoWarn");
+			self:ScheduleSelf(60, "InfernoWarn");
 		end
-		self:StartStatusBarTimer(51.5, "Infernal", "Interface\\Icons\\Spell_Shadow_SummonInfernal");
+		self:StartStatusBarTimer(64, "Infernal", "Interface\\Icons\\Spell_Shadow_SummonInfernal");
 	end
 end
 

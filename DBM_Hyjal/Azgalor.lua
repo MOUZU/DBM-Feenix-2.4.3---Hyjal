@@ -1,7 +1,7 @@
 local Azgalor = DBM:NewBossMod("Azgalor", DBM_AZGALOR_NAME, DBM_AZGALOR_DESCRIPTION, DBM_MOUNT_HYJAL, DBM_HYJAL_TAB, 4);
 
-Azgalor.Version	= "1.0";
-Azgalor.Author	= "Tandanu";
+Azgalor.Version	= "1.1";
+Azgalor.Author	= "LYQ";
 
 Azgalor:RegisterCombat("YELL", DBM_AZGALOR_YELL_PULL, nil, nil, nil, 160);
 
@@ -9,6 +9,7 @@ Azgalor:AddOption("WarnSilence", true, DBM_AZGALOR_OPTION_SILENCE);
 Azgalor:AddOption("DoomIcon", true, DBM_AZGALOR_OPTION_ICON);
 
 Azgalor:AddBarOption("Doom: (.*)")
+Azgalor:AddBarOption("Next Doom")
 Azgalor:AddBarOption("Silence")
 
 Azgalor:RegisterEvents(
@@ -30,6 +31,8 @@ function Azgalor:OnEvent(event, arg1)
 		if self.Options.WarnSilence then
 			self:Announce(DBM_AZGALOR_WARN_SILENCESOON, 1);
 		end
+    elseif event == "NextDoom" then
+        self:StartStatusBarTimer(45, "Next Doom", "Interface\\Icons\\Ability_Creature_Cursed_02");
 	end
 end
 
@@ -40,7 +43,8 @@ function Azgalor:OnSync(msg)
 		if self.Options.DoomIcon then
 			self:SetIcon(msg, 20);
 		end
-		self:StartStatusBarTimer(20, "Doom: "..msg, "Interface\\Icons\\Spell_Shadow_AuraOfDarkness");
+		self:StartStatusBarTimer(20, "Doom: "..msg, "Interface\\Icons\\Ability_Creature_Cursed_02");
+        self:ScheduleSelf(20,"NextDoom")
 	elseif msg == "Silence" then
 		if self.Options.WarnSilence then
 			self:Announce(DBM_AZGALOR_WARN_SILENCE, 2);

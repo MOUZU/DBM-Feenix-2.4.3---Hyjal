@@ -1,9 +1,10 @@
 local Rage = DBM:NewBossMod("Rage", DBM_RAGE_NAME, DBM_RAGE_DESCRIPTION, DBM_MOUNT_HYJAL, DBM_HYJAL_TAB, 1);
 
-Rage.Version	= "1.0";
-Rage.Author		= "Tandanu";
+Rage.Version	= "1.1";
+Rage.Author		= "LYQ";
 
-Rage:RegisterCombat("YELL", DBM_RAGE_YELL_PULL, nil, nil, nil, 60);
+--Rage:RegisterCombat("YELL", DBM_RAGE_YELL_PULL, nil, nil, nil, 60);
+Rage:RegisterCombat("COMBAT", 5, DBM_RAGE_NAME)
 
 Rage:AddOption("WarnIce", true, DBM_RAGE_OPTION_ICEBOLT);
 Rage:AddOption("IceIcon", false, DBM_RAGE_OPTION_ICON);
@@ -18,6 +19,10 @@ Rage:RegisterEvents(
 	"UNIT_SPELLCAST_CHANNEL_START",
 	"SPELL_CAST_START"
 );
+
+function Rage:OnCombatStart(delay)
+    self:EndStatusBarTimer("Next Wave") 
+end
 
 function Rage:OnEvent(event, arg1)
 	if event == "SPELL_AURA_APPLIED" then
@@ -38,8 +43,8 @@ function Rage:OnEvent(event, arg1)
 		if self.Options.WarnDnD then
 			self:Announce(DBM_RAGE_WARN_DND_END, 1);
 		end
-		self:StartStatusBarTimer(21, "Next Death & Decay", "Interface\\Icons\\Spell_Shadow_DeathAndDecay");
-		self:ScheduleSelf(20, "WarnDnDSoon");
+		self:StartStatusBarTimer(20, "Next Death & Decay", "Interface\\Icons\\Spell_Shadow_DeathAndDecay");
+		self:ScheduleSelf(18, "WarnDnDSoon");
 	elseif event == "WarnDnDSoon" then
 		if self.Options.WarnDnDSoon then
 			self:Announce(DBM_RAGE_WARN_DND_SOON, 1);
